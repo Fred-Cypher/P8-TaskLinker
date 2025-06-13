@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\ProjectsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProjectsRepository::class)]
@@ -19,14 +18,14 @@ class Projects
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $startingDate = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $startingDate = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $deadline = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deadline = null;
 
     #[ORM\Column]
-    private ?bool $isArchive = null;
+    private ?bool $isArchived = false;
 
     #[ORM\ManyToOne(inversedBy: 'project')]
     #[ORM\JoinColumn(nullable: false)]
@@ -74,38 +73,38 @@ class Projects
         return $this;
     }
 
-    public function getStartingDate(): ?\DateTime
+    public function getStartingDate(): ?\DateTimeImmutable
     {
         return $this->startingDate;
     }
 
-    public function setStartingDate(\DateTime $startingDate): static
+    public function setStartingDate(\DateTimeImmutable $startingDate): static
     {
         $this->startingDate = $startingDate;
 
         return $this;
     }
 
-    public function getDeadline(): ?\DateTime
+    public function getDeadline(): ?\DateTimeImmutable
     {
         return $this->deadline;
     }
 
-    public function setDeadline(?\DateTime $deadline): static
+    public function setDeadline(?\DateTimeImmutable $deadline): static
     {
         $this->deadline = $deadline;
 
         return $this;
     }
 
-    public function isArchive(): ?bool
+    public function isArchived(): ?bool
     {
-        return $this->isArchive;
+        return $this->isArchived;
     }
 
-    public function setIsArchive(bool $isArchive): static
+    public function setIsArchive(bool $isArchived): static
     {
-        $this->isArchive = $isArchive;
+        $this->isArchived = $isArchived;
 
         return $this;
     }

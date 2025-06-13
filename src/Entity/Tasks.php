@@ -22,8 +22,8 @@ class Tasks
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $deadline = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deadline = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
@@ -76,12 +76,12 @@ class Tasks
         return $this;
     }
 
-    public function getDeadline(): ?\DateTime
+    public function getDeadline(): ?\DateTimeImmutable
     {
         return $this->deadline;
     }
 
-    public function setDeadline(?\DateTime $deadline): static
+    public function setDeadline(?\DateTimeImmutable $deadline): static
     {
         $this->deadline = $deadline;
 

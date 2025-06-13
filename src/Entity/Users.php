@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
@@ -28,8 +27,8 @@ class Users
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $arrivalDate = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $arrivalDate = null;
 
     #[ORM\Column(length: 255)]
     private ?string $contract = null;
@@ -108,12 +107,12 @@ class Users
         return $this;
     }
 
-    public function getArrivalDate(): ?\DateTime
+    public function getArrivalDate(): ?\DateTimeImmutable
     {
         return $this->arrivalDate;
     }
 
-    public function setArrivalDate(\DateTime $arrivalDate): static
+    public function setArrivalDate(\DateTimeImmutable $arrivalDate): static
     {
         $this->arrivalDate = $arrivalDate;
 
