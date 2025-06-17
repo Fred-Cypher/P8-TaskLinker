@@ -32,12 +32,6 @@ class Projects
     private ?Status $status = null;
 
     /**
-     * @var Collection<int, Tags>
-     */
-    #[ORM\ManyToMany(targetEntity: Tags::class, mappedBy: 'project')]
-    private Collection $tags;
-
-    /**
      * @var Collection<int, Tasks>
      */
     #[ORM\OneToMany(targetEntity: Tasks::class, mappedBy: 'project', orphanRemoval: true)]
@@ -49,11 +43,23 @@ class Projects
     #[ORM\ManyToMany(targetEntity: Users::class, inversedBy: 'projects')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Tags>
+     */
+    #[ORM\OneToMany(targetEntity: Tags::class, mappedBy: 'projects')]
+    private Collection $tags;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
         $this->tasks = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,33 +128,6 @@ class Projects
     }
 
     /**
-     * @return Collection<int, Tags>
-     */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
-
-    public function addTag(Tags $tag): static
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-            $tag->addProject($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTag(Tags $tag): static
-    {
-        if ($this->tags->removeElement($tag)) {
-            $tag->removeProject($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Tasks>
      */
     public function getTasks(): Collection
@@ -201,4 +180,59 @@ class Projects
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Tags>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tags $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->setProjects($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tags $tag): static
+    {
+        if ($this->tags->removeElement($tag)) {
+            // set the owning side to null (unless already changed)
+            if ($tag->getProjects() === $this) {
+                $tag->setProjects(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
 }

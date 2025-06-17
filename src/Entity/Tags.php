@@ -19,20 +19,22 @@ class Tags
     private ?string $name = null;
 
     /**
-     * @var Collection<int, Projects>
-     */
-    #[ORM\ManyToMany(targetEntity: Projects::class, inversedBy: 'tags')]
-    private Collection $project;
-
-    /**
      * @var Collection<int, Tasks>
      */
     #[ORM\ManyToMany(targetEntity: Tasks::class, mappedBy: 'tags')]
     private Collection $tasks;
 
+    #[ORM\ManyToOne(inversedBy: 'tags')]
+    private ?Projects $projects = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function __construct()
     {
-        $this->project = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -49,30 +51,6 @@ class Tags
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Projects>
-     */
-    public function getProject(): Collection
-    {
-        return $this->project;
-    }
-
-    public function addProject(Projects $project): static
-    {
-        if (!$this->project->contains($project)) {
-            $this->project->add($project);
-        }
-
-        return $this;
-    }
-
-    public function removeProject(Projects $project): static
-    {
-        $this->project->removeElement($project);
 
         return $this;
     }
@@ -100,6 +78,42 @@ class Tags
         if ($this->tasks->removeElement($task)) {
             $task->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getProjects(): ?Projects
+    {
+        return $this->projects;
+    }
+
+    public function setProjects(?Projects $projects): static
+    {
+        $this->projects = $projects;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
