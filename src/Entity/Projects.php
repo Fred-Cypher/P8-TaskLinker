@@ -108,7 +108,7 @@ class Projects
         return $this->isArchived;
     }
 
-    public function setIsArchive(bool $isArchived): static
+    public function setIsArchived(bool $isArchived): static
     {
         $this->isArchived = $isArchived;
 
