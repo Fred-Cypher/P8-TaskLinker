@@ -23,15 +23,18 @@ class ProjectController extends AbstractController{
             'projects' => $projects,
         ]);
     }
-}
 
-
-/*#[Route('/', name:'app_home')]
-    public function index(): Response
+    #[Route ('/projet/{id}', name: 'app_show_project')]
+    public function show(int $id): Response
     {
-        $cars = $this->carRepository->findAll();
+        $project = $this->projectsRepository->find($id);
 
-        return $this->render('home.html.twig', [
-            'cars' => $cars,
+        if (!$project) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('projects/show.html.twig', [
+            'project' => $project
         ]);
-    }*/
+    }
+}

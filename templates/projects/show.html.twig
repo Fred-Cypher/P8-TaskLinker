@@ -1,0 +1,49 @@
+{# Détail d'un projet #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    - TaskLinker
+{% endblock %}
+
+{% block header %}
+    <div class="flex-header">
+        <h1>{{ project.name }}</h1>
+        <div class="user-list">
+            {% for user in project.users %}
+                <div class="avatar">
+                    {{ user.firstname|first }}{{ user.lastname|first }}
+                </div>
+            {% endfor %}
+        </div>
+        <a class="button" href="#">Modifier</a>
+    </div>
+{% endblock %}
+
+{% block body %}
+    {% for task in project.tasks %}
+        <div class="task-column">
+            <h2>{{ task.status.name }}</h2>
+            <div class="tasks-list">
+                <a class="task" href="tache.html">
+                    <h3>{{ task.title }}</h3>
+                    <p>
+                        {{ task.description }}
+                    </p>
+                    <div class="task-infos">
+                        <div class="task-deadline">
+                            <i
+                                class="fa-regular fa-calendar"
+                            ></i>
+                            {# {{ task.deadline|format_datetime }} #} deadline
+                        </div>
+                        <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
+                    </div>
+                </a>
+                <a href="tache-add.html" class="task-add">
+                    + Ajouter une tâche
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
