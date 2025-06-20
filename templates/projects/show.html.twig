@@ -21,29 +21,86 @@
 {% endblock %}
 
 {% block body %}
-    {% for task in project.tasks %}
-        <div class="task-column">
-            <h2>{{ task.status.name }}</h2>
-            <div class="tasks-list">
-                <a class="task" href="tache.html">
-                    <h3>{{ task.title }}</h3>
-                    <p>
-                        {{ task.description }}
-                    </p>
-                    <div class="task-infos">
-                        <div class="task-deadline">
-                            <i
-                                class="fa-regular fa-calendar"
-                            ></i>
-                            {# {{ task.deadline|format_datetime }} #} deadline
+    <div id="content">
+        <div id="tasks-container">
+            <div class="task-column">
+                <h2>To Do</h2>
+                {% for task in project.tasks %}
+                    {% if task.status.name == 'To Do' %}
+                        <div class="tasks-list">
+                            <a class="task" href="tache.html">
+                                <h3>{{ task.title }}</h3>
+                                <p>
+                                    {{ task.description }}
+                                </p>
+                                <div class="task-infos">
+                                    <div class="task-deadline">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        {# {{ task.deadline|format_datetime }} #} deadline
+                                    </div>
+                                    <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
+                                </div>
+                            </a>
+                            
                         </div>
-                        <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
-                    </div>
+                    {% endif %}
+                {% endfor %}
+                <a href="tache-add.html" class="task-add">
+                    + Ajouter une tâche
                 </a>
+            </div>
+            <div class="task-column">
+                <h2>Doing</h2>
+                {% for task in project.tasks %}
+                    {% if task.status.name == 'Doing' %}
+                        <div class="tasks-list">
+                            <a class="task" href="tache.html">
+                                <h3>{{ task.title }}</h3>
+                                <p>
+                                    {{ task.description }}
+                                </p>
+                                <div class="task-infos">
+                                    <div class="task-deadline">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        {# {{ task.deadline|format_datetime }} #} deadline
+                                    </div>
+                                    <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
+                                </div>
+                            </a>
+                            
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <a href="tache-add.html" class="task-add">
+                    + Ajouter une tâche
+                </a>
+            </div>
+            <div class="task-column">
+                <h2>Done</h2>
+                {% for task in project.tasks %}
+                    {% if task.status.name == 'Done' %}
+                        <div class="tasks-list">
+                            <a class="task" href="tache.html">
+                                <h3>{{ task.title }}</h3>
+                                <p>
+                                    {{ task.description }}
+                                </p>
+                                <div class="task-infos">
+                                    <div class="task-deadline">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        {# {{ task.deadline|format_datetime }} #} deadline
+                                    </div>
+                                    <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
+                                </div>
+                            </a>
+                            
+                        </div>
+                    {% endif %}
+                {% endfor %}
                 <a href="tache-add.html" class="task-add">
                     + Ajouter une tâche
                 </a>
             </div>
         </div>
-    {% endfor %}
+    </div>
 {% endblock %}
