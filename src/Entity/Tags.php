@@ -27,7 +27,7 @@ class Tags
     #[ORM\ManyToOne(inversedBy: 'tags')]
     private ?Projects $projects = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]

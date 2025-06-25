@@ -30,7 +30,7 @@ class Status
     #[ORM\OneToMany(targetEntity: Tasks::class, mappedBy: 'status')]
     private Collection $tasks;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]

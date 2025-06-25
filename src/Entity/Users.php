@@ -48,7 +48,7 @@ class Users
     #[ORM\ManyToMany(targetEntity: Projects::class, mappedBy: 'users')]
     private Collection $projects;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]

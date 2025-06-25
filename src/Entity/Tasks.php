@@ -42,7 +42,7 @@ class Tasks
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'tasks')]
     private Collection $tags;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]

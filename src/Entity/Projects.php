@@ -49,7 +49,7 @@ class Projects
     #[ORM\OneToMany(targetEntity: Tags::class, mappedBy: 'projects')]
     private Collection $tags;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
