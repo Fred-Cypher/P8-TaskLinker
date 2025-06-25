@@ -1,0 +1,25 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ task.title }}- TaskLinker
+{% endblock %}
+
+{% block header %}
+    <h1>{{ task.title }}</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }} 
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.deadline) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.users) }}
+        <button class="button button-submit">Modifier</button>
+    {{ form_end(form) }}
+    <form method="post" action="{{ path('app_delete_task', { taskId: task.id }) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete_task_' ~ task.id) }}">
+        <a href="{{ path('app_delete_task', { taskId: task.id }) }}" class="delete-task">Supprimer la tâche</a>
+    </form>
+{% endblock %}

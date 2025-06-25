@@ -1,0 +1,22 @@
+{# Création d'une nouvelle tâche #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Créer une tâche - TaskLinker
+{% endblock %}
+
+{% block header %}
+    <h1>Créer une tâche</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }} 
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.deadline) }}
+        {{ form_row(form.status) }}
+        {{ form_row(form.users) }}
+        <button class="button button-submit">Ajouter</button>
+    {{ form_end(form) }}
+{% endblock %}
