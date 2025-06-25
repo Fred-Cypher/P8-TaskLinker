@@ -34,7 +34,7 @@ final class StatusFactory extends PersistentProxyObjectFactory
         return [
             //'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'createdAt' => new \DateTimeImmutable(),
-            'name' => self::faker()->randomElement(['To Do', 'Doing', 'Done']),
+            'name' => 'To Do',
         ];
     }
 

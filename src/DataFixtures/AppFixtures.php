@@ -16,7 +16,12 @@ class AppFixtures extends Fixture
     {
         // $product = new Product();
         // $manager->persist($product);
-        StatusFactory::createMany(3);
+        //StatusFactory::createMany(3);
+
+        StatusFactory::createOne(['name' => 'To Do']);
+        StatusFactory::createOne(['name' => 'Doing']);
+        StatusFactory::createOne(['name' => 'Done']);
+
         TagsFactory::createMany(3);
         UsersFactory::createMany(10);
         ProjectsFactory::createMany(5);
