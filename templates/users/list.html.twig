@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Liste des employés - TaskLinker
+{% endblock %}
+
+{% block menu %}
+    <ul id="main-menu">
+        <li class="">
+            <a href="{{ path('app_home') }}">
+                <i class="fa-solid fa-list-check"></i> Projets
+            </a>
+        </li>
+        <li class="active">
+            <a href="{{ path('app_users') }}">
+                <i class="fa-regular fa-user"></i> Équipe
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <h1>Équipe</h1>
+{% endblock %}
+
+{% block body %}
+    <table id="team-container">
+        <thead>
+            <tr>
+                <th>Prénom, Nom</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <div class="employee-infos">
+                            <div class="employee-avatar">{{ user.firstname|first }}{{ user.lastname|first }}</div>
+                            <div class="employee-coords">
+                                <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                                <span>{{ user.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ user.contract }}</td>
+                    <td>
+                        <a class="button button-edit-team" href="{{ path('app_edit_user', {userId: user.id}) }}">
+                            Éditer
+                        </a>
+                        <a class="delete-team" href="{{ path('app_delete_user', { userId: user.id}) }}">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
