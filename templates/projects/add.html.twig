@@ -1,0 +1,19 @@
+{# Ajout d'un nouveau projet #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Nouveau projet - TaskLinker
+{% endblock %}
+
+{% block header %}
+    <h1>Nouveau Projet</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }} 
+        {{ form_row(form.name) }}
+        {{ form_row(form.users) }}
+        <button class="button button-submit">Continuer</button>
+    {{ form_end(form) }}
+{% endblock %}

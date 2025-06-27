@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Projects;
-use App\Form\ProjectForm;
+use App\Form\ProjectFormType;
 use App\Repository\ProjectsRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,7 +47,7 @@ class ProjectController extends AbstractController{
     {
         $project = new Projects;
 
-        $form = $this->createForm(ProjectForm::class, $project);
+        $form = $this->createForm(ProjectFormType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
