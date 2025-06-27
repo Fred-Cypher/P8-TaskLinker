@@ -18,7 +18,7 @@ class Projects
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $startingDate = null;
 
     #[ORM\Column(nullable: true)]
@@ -28,7 +28,7 @@ class Projects
     private ?bool $isArchived = false;
 
     #[ORM\ManyToOne(inversedBy: 'project')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Status $status = null;
 
     /**

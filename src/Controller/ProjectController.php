@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Projects;
+use App\Form\ProjectForm;
 use App\Repository\ProjectsRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,7 +28,7 @@ class ProjectController extends AbstractController{
         ]);
     }
 
-    #[Route ('/projet/{id}', name: 'app_show_project')]
+    #[Route ('/project/{id}', name: 'app_show_project')]
     public function show(int $id): Response
     {
         $project = $this->projectsRepository->find($id);
@@ -35,6 +39,30 @@ class ProjectController extends AbstractController{
 
         return $this->render('projects/show.html.twig', [
             'project' => $project
+        ]);
+    }
+
+    #[Route ('/newProject', name: 'app_new_project')]
+    public function new(Request $request): Response
+    {
+        $project = new Projects;
+
+        $form = $this->createForm(ProjectForm::class, $project);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $project->setCreatedAt(new DateTimeImmutable());
+            $project->setUpdatedAt(new DateTimeImmutable());
+
+            $this->em->persist($project);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('projects/add.html.twig', [
+            'project' => $project,
+            'form' => $form,
         ]);
     }
 }
