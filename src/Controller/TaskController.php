@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Projects;
 use App\Entity\Tasks;
-use App\Form\TaskForm;
+use App\Form\TaskFormType;
 use App\Repository\TasksRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +32,7 @@ class TaskController extends AbstractController
         $task = new Tasks;
         $task->setProject($project);
 
-        $form = $this->createForm(TaskForm::class, $task);
+        $form = $this->createForm(TaskFormType::class, $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
@@ -60,7 +60,7 @@ class TaskController extends AbstractController
             throw $this->createNotFoundException('Tâche introuvable');
         }
 
-        $form = $this->createForm(TaskForm::class, $task);
+        $form = $this->createForm(TaskFormType::class, $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

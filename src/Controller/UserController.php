@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Users;
-use App\Form\UserForm;
+use App\Form\UserFormType;
 use App\Repository\UsersRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +38,7 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('Employé introuvable');
         }
 
-        $form = $this->createForm(UserForm::class, $user);
+        $form = $this->createForm(UserFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
