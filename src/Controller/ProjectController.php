@@ -21,7 +21,7 @@ class ProjectController extends AbstractController{
     #[Route ('/', name: 'app_home')]
     public function index(): Response
     {
-        $projects = $this->projectsRepository->findAll();
+        $projects = $this->em->getRepository(Projects::class)->findBy([ 'isArchived' => false]);
 
         return $this->render('home.html.twig', [
             'projects' => $projects,
@@ -61,6 +61,47 @@ class ProjectController extends AbstractController{
         }
 
         return $this->render('projects/add.html.twig', [
+            'project' => $project,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route ('/project/archive/{projectId}', name: 'app_archive_project')]
+    public function archiveProject(int $projectId): Response
+    {
+        $project = $this->projectsRepository->find($projectId);
+
+        if (!$project) {
+            throw $this->createNotFoundException('Projet introuvable');
+        }
+
+        $project->setIsArchived(true);
+        $this->em->flush();
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route ('/project/edit/{projectId}', name: 'app_edit_project')]
+    public function editProject(Request $request, int $projectId): Response
+    {
+        $project = $this->em->getRepository(Projects::class)->find($projectId);
+
+        if (!$project) {
+            throw $this->createNotFoundException('Projet introuvable');
+        }
+
+        $form = $this->createForm(ProjectFormType::class, $project);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $project->setUpdatedAt(new DateTimeImmutable());
+
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
+
+        return $this->render('projects/edit.html.twig', [
             'project' => $project,
             'form' => $form,
         ]);
