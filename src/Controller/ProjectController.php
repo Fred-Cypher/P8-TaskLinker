@@ -57,7 +57,7 @@ class ProjectController extends AbstractController{
             $this->em->persist($project);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
         }
 
         return $this->render('projects/add.html.twig', [
@@ -98,7 +98,7 @@ class ProjectController extends AbstractController{
 
             $this->em->flush();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
         }
 
         return $this->render('projects/edit.html.twig', [
