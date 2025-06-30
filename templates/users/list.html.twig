@@ -37,9 +37,9 @@
                 <tr>
                     <td>
                         <div class="employee-infos">
-                            <div class="employee-avatar">{{ user.firstname|first }}{{ user.lastname|first }}</div>
+                            <div class="employee-avatar">{{ user.firstname|first|capitalize }}{{ user.lastname|first|capitalize }}</div>
                             <div class="employee-coords">
-                                <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                                <strong>{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}</strong>
                                 <span>{{ user.email }}</span>
                             </div>
                         </div>

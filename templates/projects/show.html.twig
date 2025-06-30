@@ -35,7 +35,7 @@
                             <div class="task-infos">
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i>
-                                    {{ task.deadline|date("m/d/Y") }}
+                                    {{ task.deadline|date("d/m/Y") }}
                                 </div>
                                 {% if task.users %}
                                     <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
@@ -63,7 +63,7 @@
                             <div class="task-infos">
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i>
-                                    {{ task.deadline|date("m/d/Y") }}
+                                    {{ task.deadline|date("d/m/Y") }}
                                 </div>
                                 {% if task.users %}
                                     <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
@@ -91,7 +91,7 @@
                             <div class="task-infos">
                                 <div class="task-deadline">
                                     <i class="fa-regular fa-calendar"></i>
-                                    {{ task.deadline|date("m/d/Y") }}
+                                    {{ task.deadline|date("d/m/Y") }}
                                 </div>
                                 {% if task.users %}
                                     <div class="mini-user">{{ task.users.firstname|first }}{{ task.users.lastname|first }}</div>
