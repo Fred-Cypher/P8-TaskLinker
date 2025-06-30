@@ -1,0 +1,42 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ user.firstName|first }} {{ user.lastName|first }}- TaskLinker
+{% endblock %}
+
+{% block menu %}
+    <ul id="main-menu">
+        <li class="">
+            <a href="{{ path('app_home') }}">
+                <i class="fa-solid fa-list-check"></i> Projets
+            </a>
+        </li>
+        <li class="active">
+            <a href="{{ path('app_users') }}">
+                <i class="fa-regular fa-user"></i> Équipe
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block header %}
+    <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }} 
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.email) }}
+        <div class="form-flex">
+            <div>
+                {{ form_row(form.arrivalDate) }}
+            </div>
+            <div>
+                {{ form_row(form.contract) }}
+            </div>
+        </div>
+        <button class="button button-submit">Enregistrer</button>
+    {{ form_end(form) }}
+{% endblock %}
