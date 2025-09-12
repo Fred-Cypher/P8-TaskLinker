@@ -14,13 +14,11 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
-        //StatusFactory::createMany(3);
-
         StatusFactory::createOne(['name' => 'To Do']);
         StatusFactory::createOne(['name' => 'Doing']);
         StatusFactory::createOne(['name' => 'Done']);
+        UsersFactory::createOne(['roles' => ['ROLE_USER']]);
+        UsersFactory::createOne(['roles' => ['ROLE_ADMIN']]);
 
         TagsFactory::createMany(3);
         UsersFactory::createMany(10);

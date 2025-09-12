@@ -34,13 +34,13 @@ final class UsersFactory extends PersistentProxyObjectFactory
         return [
             'arrivalDate' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-2 years', 'now')),
             'contract' => self::faker()->randomElement(['CDI', 'CDD', 'Freelance']),
-            //'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'createdAt' => new \DateTimeImmutable(),
             'email' => self::faker()->unique()->safeEmail(),
             'firstName' => self::faker()->firstName(),
             'isActive' => self::faker()->boolean(90),
             'lastName' => self::faker()->lastName(),
             'password' => password_hash('password', PASSWORD_BCRYPT),
+            'roles' => [self::faker()->randomElement(['ROLE_USER', 'ROLE_ADMIN'])],
         ];
     }
 
