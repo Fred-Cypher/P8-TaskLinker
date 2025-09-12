@@ -6,9 +6,11 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-class Users
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class Users implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,10 +29,13 @@ class Users
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
+    private ?array $roles = [];
+
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $arrivalDate = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contract = null;
 
     #[ORM\Column]
@@ -58,6 +63,12 @@ class Users
     {
         $this->tasks = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->arrivalDate = new \DateTimeImmutable();
+        $this->contract = null;
+        $this->roles = ['ROLE_USER'];
+        $this->isActive = true;
     }
 
     public function getId(): ?int
@@ -113,6 +124,22 @@ class Users
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     public function getArrivalDate(): ?\DateTimeImmutable
     {
         return $this->arrivalDate;
@@ -130,7 +157,7 @@ class Users
         return $this->contract;
     }
 
-    public function setContract(string $contract): static
+    public function setContract(?string $contract): static
     {
         $this->contract = $contract;
 
