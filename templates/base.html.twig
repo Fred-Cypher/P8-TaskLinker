@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1" />
         <title> {% block title %}TaskLinker{% endblock %} </title>
@@ -27,7 +28,7 @@
         {% endblock %}
 
         {% block javascripts %}
-            
+
         {% endblock %}
     </head>
     <body>
@@ -53,7 +54,13 @@
             </nav>
             <main>
                 <header>
-                    <div id="current-user"></div>
+                    <div id="current-user">
+                        {% if app.user %}
+                            <a href="{{ path('app_logout') }}" class="avatar">
+                                {{ app.user.firstname|first }}{{ app.user.lastname|first }}
+                            </a>
+                        {% endif %}
+                    </div>
                         <div id="title-page">
                             {% block header %}
                                 <h1>Projets</h1>
