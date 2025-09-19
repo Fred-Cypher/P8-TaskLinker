@@ -45,9 +45,11 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_users') }}">
-                                <i class="fa-regular fa-user"></i> Équipe
-                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_users') }}">
+                                    <i class="fa-regular fa-user"></i> Équipe
+                                </a>
+                            {% endif %}
                         </li>
                     </ul>
                 {% endblock %}

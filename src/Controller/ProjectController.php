@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProjectController extends AbstractController{
     public function __construct(private ProjectsRepository $projectsRepository, private EntityManagerInterface $em)
     {
-        
+
     }
 
     #[Route ('/', name: 'app_home')]
@@ -42,7 +42,7 @@ class ProjectController extends AbstractController{
         ]);
     }
 
-    #[Route ('/newProject', name: 'app_new_project')]
+    #[Route ('/admin/newProject', name: 'app_new_project')]
     public function new(Request $request): Response
     {
         $project = new Projects;
@@ -81,7 +81,7 @@ class ProjectController extends AbstractController{
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route ('/project/edit/{projectId}', name: 'app_edit_project')]
+    #[Route ('/admin/project/edit/{projectId}', name: 'app_edit_project')]
     public function editProject(Request $request, int $projectId): Response
     {
         $project = $this->em->getRepository(Projects::class)->find($projectId);
