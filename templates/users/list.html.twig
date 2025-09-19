@@ -29,6 +29,7 @@
             <tr>
                 <th>Prénom, Nom</th>
                 <th>Statut</th>
+                <th>Rôle</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -45,6 +46,14 @@
                         </div>
                     </td>
                     <td>{{ user.contract }}</td>
+                    <td>
+                        {% if 'ROLE_ADMIN' in user.roles %}
+                            Chef de projet
+                        {% elseif 'ROLE_USER' in user.roles %}
+                            Collaborateur
+                        {% else %}
+                            Aucun rôle n'est attribué
+                        {% endif %}</td>
                     <td>
                         <a class="button button-edit-team" href="{{ path('app_edit_user', {userId: user.id}) }}">
                             Éditer

@@ -79,6 +79,11 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isActive = true;
     }
 
+    public function __toString(): string
+    {
+        return implode(', ', $this->roles);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

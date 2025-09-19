@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Users;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +37,28 @@ class UserFormType extends AbstractType
                 'label' => 'Statut',
                 'required' => true,
             ])
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Chef de projet' => 'ROLE_ADMIN',
+                    'Collaborateur' => 'ROLE_USER',
+                ],
+                'expanded' => false,
+                'multiple' => false,
+                'label' => 'Rôle',
+            ])
         ;
+
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesArray) {
+                    // array -> string (affichage du formulaire)
+                    return $rolesArray[0] ?? null;
+                },
+                function ($rolesString) {
+                    // string -> array (stockage en BDD)
+                    return [$rolesString];
+                }
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -44,4 +67,6 @@ class UserFormType extends AbstractType
             'data_class' => Users::class,
         ]);
     }
+
+
 }

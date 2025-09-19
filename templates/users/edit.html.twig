@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block body %}
-    {{ form_start(form) }} 
+    {{ form_start(form) }}
         {{ form_row(form.lastName) }}
         {{ form_row(form.firstName) }}
         {{ form_row(form.email) }}
@@ -37,6 +37,7 @@
                 {{ form_row(form.contract) }}
             </div>
         </div>
+        {{ form_row(form.roles) }}
         <button class="button button-submit">Enregistrer</button>
     {{ form_end(form) }}
 {% endblock %}
