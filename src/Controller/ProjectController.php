@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProjectController extends AbstractController{
     public function __construct(private ProjectsRepository $projectsRepository, private EntityManagerInterface $em)
@@ -18,10 +19,11 @@ class ProjectController extends AbstractController{
 
     }
 
-    #[Route ('/', name: 'app_home')]
-    public function index(): Response
+    #[Route ('/home', name: 'app_home')]
+    public function index(ProjectsRepository $projectsRepository): Response
     {
-        $projects = $this->em->getRepository(Projects::class)->findBy([ 'isArchived' => false]);
+        $user = $this->getUser();
+        $projects = $projectsRepository->findProjectsForUser($user);
 
         return $this->render('home.html.twig', [
             'projects' => $projects,
@@ -29,16 +31,11 @@ class ProjectController extends AbstractController{
     }
 
     #[Route ('/project/{id}', name: 'app_show_project')]
-    public function show(int $id): Response
+    #[IsGranted('PROJECTS_VIEW', subject: 'project')]
+    public function show(Projects $project): Response
     {
-        $project = $this->projectsRepository->find($id);
-
-        if (!$project) {
-            return $this->redirectToRoute('app_home');
-        }
-
         return $this->render('projects/show.html.twig', [
-            'project' => $project
+            'project' => $project,
         ]);
     }
 

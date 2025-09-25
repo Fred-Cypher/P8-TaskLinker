@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Projects;
+use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,23 @@ class ProjectsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Projects::class);
+    }
+    public function findProjectsForUser(Users $user): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.isArchived = :archived')
+            ->setParameter('archived', false);
+
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return $qb->getQuery()->getResult();
+        }
+
+        return $qb
+            ->join('p.users', 'u')
+            ->andWhere('u = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**
