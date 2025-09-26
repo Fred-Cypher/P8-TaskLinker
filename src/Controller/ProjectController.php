@@ -40,6 +40,7 @@ class ProjectController extends AbstractController{
     }
 
     #[Route ('/admin/newProject', name: 'app_new_project')]
+    #[IsGranted('PROJECTS_CREATE')]
     public function new(Request $request): Response
     {
         $project = new Projects;
@@ -78,29 +79,28 @@ class ProjectController extends AbstractController{
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route ('/admin/project/edit/{projectId}', name: 'app_edit_project')]
-    public function editProject(Request $request, int $projectId): Response
+    #[Route ('/admin/project/edit/{project}', name: 'app_edit_project')]
+    #[IsGranted('PROJECTS_EDIT', subject: 'project')]
+    public function editProject(Request $request, Projects $project): Response
     {
-        $project = $this->em->getRepository(Projects::class)->find($projectId);
-
-        if (!$project) {
-            throw $this->createNotFoundException('Projet introuvable');
-        }
+//        $project = $this->em->getRepository(Projects::class)->find($projectId);
 
         $form = $this->createForm(ProjectFormType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $project->setUpdatedAt(new DateTimeImmutable());
+            $project->setUpdatedAt(new \DateTimeImmutable());
 
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
+            return $this->redirectToRoute('app_show_project', [
+                'id' => $project->getId()
+            ]);
         }
 
         return $this->render('projects/edit.html.twig', [
-            'project' => $project,
             'form' => $form,
+            'project' => $project,
         ]);
     }
 }

@@ -6,14 +6,16 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Users implements UserInterface, PasswordAuthenticatedUserInterface
+class Users implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -67,6 +69,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $emailAuthCode = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isEmailAuthEnabled = false;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -77,6 +85,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->contract = null;
         $this->roles = ['ROLE_USER'];
         $this->isActive = true;
+        $this->isEmailAuthEnabled = true;
     }
 
     public function __toString(): string
@@ -141,7 +150,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -278,5 +286,27 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return $this->isEmailAuthEnabled;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        // Retourne l'adresse e-mail de l'utilisateur.
+        // C'est l'adresse à laquelle le code 2FA sera envoyé.
+        return $this->getEmail();
+    }
+
+    public function setEmailAuthCode(string $code): void
+    {
+        $this->emailAuthCode = $code;
+    }
+
+    public function getEmailAuthCode(): ?string
+    {
+        return $this->emailAuthCode;
     }
 }
