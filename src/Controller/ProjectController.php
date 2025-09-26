@@ -64,15 +64,10 @@ class ProjectController extends AbstractController{
         ]);
     }
 
-    #[Route ('/project/archive/{projectId}', name: 'app_archive_project')]
-    public function archiveProject(int $projectId): Response
+    #[Route ('/project/archive/{project}', name: 'app_archive_project')]
+    #[IsGranted('PROJECTS_DELETE', subject: 'project')]
+    public function archiveProject(Projects $project): Response
     {
-        $project = $this->projectsRepository->find($projectId);
-
-        if (!$project) {
-            throw $this->createNotFoundException('Projet introuvable');
-        }
-
         $project->setIsArchived(true);
         $this->em->flush();
 
