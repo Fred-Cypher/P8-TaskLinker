@@ -87,7 +87,7 @@ class ProjectController extends AbstractController{
             $this->em->flush();
 
             return $this->redirectToRoute('app_show_project', [
-                'id' => $project->getId()
+                'project' => $project->getId()
             ]);
         }
 

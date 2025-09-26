@@ -38,12 +38,11 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $task->setCreatedAt(new \DateTimeImmutable());
             $task->setUpdatedAt(new \DateTimeImmutable());
-            //$task = $form->getData();
 
             $this->em->persist($task);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $projectId]);
+            return $this->redirectToRoute('app_show_project', ['project' => $projectId]);
         }
 
         return $this->render('tasks/add.html.twig', [
