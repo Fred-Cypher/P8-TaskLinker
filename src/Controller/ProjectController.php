@@ -30,7 +30,7 @@ class ProjectController extends AbstractController{
         ]);
     }
 
-    #[Route ('/project/{id}', name: 'app_show_project')]
+    #[Route ('/project/{project}', name: 'app_show_project')]
     #[IsGranted('PROJECTS_VIEW', subject: 'project')]
     public function show(Projects $project): Response
     {
@@ -55,7 +55,7 @@ class ProjectController extends AbstractController{
             $this->em->persist($project);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
+            return $this->redirectToRoute('app_show_project', ['project' => $project->getId()]);
         }
 
         return $this->render('projects/add.html.twig', [
@@ -78,8 +78,6 @@ class ProjectController extends AbstractController{
     #[IsGranted('PROJECTS_EDIT', subject: 'project')]
     public function editProject(Request $request, Projects $project): Response
     {
-//        $project = $this->em->getRepository(Projects::class)->find($projectId);
-
         $form = $this->createForm(ProjectFormType::class, $project);
         $form->handleRequest($request);
 
