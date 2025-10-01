@@ -6,9 +6,16 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-class Users
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class Users implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,21 +23,29 @@ class Users
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Email(message: "Veuillez saisir une adresse email valide")]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'json')]
+    #[Assert\NotBlank]
+    private ?array $roles = [];
+
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\NotBlank]
     private ?\DateTimeImmutable $arrivalDate = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contract = null;
 
     #[ORM\Column]
@@ -54,10 +69,28 @@ class Users
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $emailAuthCode = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isEmailAuthEnabled = false;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+        $this->arrivalDate = new \DateTimeImmutable();
+        $this->contract = null;
+        $this->roles = ['ROLE_USER'];
+        $this->isActive = true;
+        $this->isEmailAuthEnabled = true;
+    }
+
+    public function __toString(): string
+    {
+        return implode(', ', $this->roles);
     }
 
     public function getId(): ?int
@@ -113,6 +146,21 @@ class Users
         return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     public function getArrivalDate(): ?\DateTimeImmutable
     {
         return $this->arrivalDate;
@@ -130,7 +178,7 @@ class Users
         return $this->contract;
     }
 
-    public function setContract(string $contract): static
+    public function setContract(?string $contract): static
     {
         $this->contract = $contract;
 
@@ -228,5 +276,37 @@ class Users
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return $this->isEmailAuthEnabled;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        // Retourne l'adresse e-mail de l'utilisateur.
+        // C'est l'adresse à laquelle le code 2FA sera envoyé.
+        return $this->getEmail();
+    }
+
+    public function setEmailAuthCode(string $code): void
+    {
+        $this->emailAuthCode = $code;
+    }
+
+    public function getEmailAuthCode(): ?string
+    {
+        return $this->emailAuthCode;
     }
 }

@@ -1,0 +1,12 @@
+{% extends 'nolog.html.twig' %}
+
+{% block title %}Vérification 2FA{% endblock %}
+
+{% block body %}
+    <form action="{{ path('security_2fa_check') }}" method="post">
+        <label for="_auth_code">Code de vérification :</label>
+        <input type="text" id="_auth_code" name="_auth_code" required autofocus>
+
+        <button type="submit">Valider</button>
+    </form>
+{% endblock %}

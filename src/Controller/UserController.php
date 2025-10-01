@@ -19,7 +19,7 @@ class UserController extends AbstractController
 
     }
 
-    #[Route ('/users', name: 'app_users')]
+    #[Route ('/admin/users', name: 'app_users')]
     public function allUsers(): Response
     {
         $users = $this->usersRepository->findAll();
@@ -29,7 +29,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route ('/user/edit/{userId}', name: 'app_edit_user', methods: ['GET', 'POST'])]
+    #[Route ('/admin/user/edit/{userId}', name: 'app_edit_user', methods: ['GET', 'POST'])]
     public function editUser(Request $request, int $userId): Response
     {
         $user = $this->em->getRepository(Users::class)->find($userId);
@@ -55,7 +55,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/delete/{userId}', name: 'app_delete_user', methods: ['GET', 'POST'])]
+    #[Route('/admin/user/delete/{userId}', name: 'app_delete_user', methods: ['GET', 'POST'])]
     public function deleteUser(int $userId): Response
     {
         $user = $this->em->getRepository(Users::class)->find($userId);

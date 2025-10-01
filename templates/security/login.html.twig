@@ -1,0 +1,23 @@
+{% extends 'nolog.html.twig' %}
+
+{% block title %}Connexion - Tasklinker{% endblock %}
+
+{% block body %}
+    <form action="{{ path('app_login') }}" method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <label for="username">E-mail</label>
+        <input type="email" value="{{ email }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+        <label for="password">Mot de passe</label>
+        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+        <button class="button button-submit" type="submit">
+            Continuer
+        </button>
+
+        <a href="{{ path('app_register') }}" class="link-logout">Pas de compte ? S'inscrire</a>
+    </form>
+{% endblock %}

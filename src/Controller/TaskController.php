@@ -17,10 +17,10 @@ class TaskController extends AbstractController
 {
     public function __construct(private TasksRepository $tasksRepository, private EntityManagerInterface $em)
     {
-        
+
     }
 
-    #[Route('project/{projectId}/newTask', name: 'app_new_task')]
+    #[Route('/admin/project/{projectId}/newTask', name: 'app_new_task')]
     public function new(Request $request, int $projectId): Response
     {
         $project = $this->em->getRepository(Projects::class)->find($projectId);
@@ -38,12 +38,11 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()){
             $task->setCreatedAt(new \DateTimeImmutable());
             $task->setUpdatedAt(new \DateTimeImmutable());
-            //$task = $form->getData();
 
             $this->em->persist($task);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $projectId]);
+            return $this->redirectToRoute('app_show_project', ['project' => $projectId]);
         }
 
         return $this->render('tasks/add.html.twig', [
@@ -52,7 +51,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('task/edit/{taskId}', name: 'app_edit_task', methods: ['GET', 'POST'])]
+    #[Route('/admin/task/edit/{taskId}', name: 'app_edit_task', methods: ['GET', 'POST'])]
     public function editTask(Request $request, int $taskId): Response
     {
         $task = $this->em->getRepository(Tasks::class)->find($taskId);
@@ -77,7 +76,7 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('task/delete/{taskId}', name: 'app_delete_task', methods: ['GET','POST'])]
+    #[Route('/admin/task/delete/{taskId}', name: 'app_delete_task', methods: ['GET','POST'])]
     public function deleteTask(Request $request, int $taskId): Response
     {
         $task = $this->em->getRepository(Tasks::class)->find($taskId);

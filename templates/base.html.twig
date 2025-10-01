@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width; initial-scale=1" />
         <title> {% block title %}TaskLinker{% endblock %} </title>
@@ -27,7 +28,7 @@
         {% endblock %}
 
         {% block javascripts %}
-            
+
         {% endblock %}
     </head>
     <body>
@@ -44,16 +45,24 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ path('app_users') }}">
-                                <i class="fa-regular fa-user"></i> Équipe
-                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_users') }}">
+                                    <i class="fa-regular fa-user"></i> Équipe
+                                </a>
+                            {% endif %}
                         </li>
                     </ul>
                 {% endblock %}
             </nav>
             <main>
                 <header>
-                    <div id="current-user"></div>
+                    <div id="current-user">
+                        {% if app.user %}
+                            <a href="{{ path('app_logout') }}" class="avatar">
+                                {{ app.user.firstname|first }}{{ app.user.lastname|first }}
+                            </a>
+                        {% endif %}
+                    </div>
                         <div id="title-page">
                             {% block header %}
                                 <h1>Projets</h1>

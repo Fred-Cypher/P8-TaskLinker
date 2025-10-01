@@ -11,38 +11,36 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProjectController extends AbstractController{
     public function __construct(private ProjectsRepository $projectsRepository, private EntityManagerInterface $em)
     {
-        
+
     }
 
-    #[Route ('/', name: 'app_home')]
-    public function index(): Response
+    #[Route ('/home', name: 'app_home')]
+    public function index(ProjectsRepository $projectsRepository): Response
     {
-        $projects = $this->em->getRepository(Projects::class)->findBy([ 'isArchived' => false]);
+        $user = $this->getUser();
+        $projects = $projectsRepository->findProjectsForUser($user);
 
         return $this->render('home.html.twig', [
             'projects' => $projects,
         ]);
     }
 
-    #[Route ('/project/{id}', name: 'app_show_project')]
-    public function show(int $id): Response
+    #[Route ('/project/{project}', name: 'app_show_project')]
+    #[IsGranted('PROJECTS_VIEW', subject: 'project')]
+    public function show(Projects $project): Response
     {
-        $project = $this->projectsRepository->find($id);
-
-        if (!$project) {
-            return $this->redirectToRoute('app_home');
-        }
-
         return $this->render('projects/show.html.twig', [
-            'project' => $project
+            'project' => $project,
         ]);
     }
 
-    #[Route ('/newProject', name: 'app_new_project')]
+    #[Route ('/admin/newProject', name: 'app_new_project')]
+    #[IsGranted('PROJECTS_CREATE')]
     public function new(Request $request): Response
     {
         $project = new Projects;
@@ -57,7 +55,7 @@ class ProjectController extends AbstractController{
             $this->em->persist($project);
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
+            return $this->redirectToRoute('app_show_project', ['project' => $project->getId()]);
         }
 
         return $this->render('projects/add.html.twig', [
@@ -66,44 +64,36 @@ class ProjectController extends AbstractController{
         ]);
     }
 
-    #[Route ('/project/archive/{projectId}', name: 'app_archive_project')]
-    public function archiveProject(int $projectId): Response
+    #[Route ('/project/archive/{project}', name: 'app_archive_project')]
+    #[IsGranted('PROJECTS_DELETE', subject: 'project')]
+    public function archiveProject(Projects $project): Response
     {
-        $project = $this->projectsRepository->find($projectId);
-
-        if (!$project) {
-            throw $this->createNotFoundException('Projet introuvable');
-        }
-
         $project->setIsArchived(true);
         $this->em->flush();
 
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route ('/project/edit/{projectId}', name: 'app_edit_project')]
-    public function editProject(Request $request, int $projectId): Response
+    #[Route ('/admin/project/edit/{project}', name: 'app_edit_project')]
+    #[IsGranted('PROJECTS_EDIT', subject: 'project')]
+    public function editProject(Request $request, Projects $project): Response
     {
-        $project = $this->em->getRepository(Projects::class)->find($projectId);
-
-        if (!$project) {
-            throw $this->createNotFoundException('Projet introuvable');
-        }
-
         $form = $this->createForm(ProjectFormType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $project->setUpdatedAt(new DateTimeImmutable());
+            $project->setUpdatedAt(new \DateTimeImmutable());
 
             $this->em->flush();
 
-            return $this->redirectToRoute('app_show_project', ['id' => $project->getId()]);
+            return $this->redirectToRoute('app_show_project', [
+                'project' => $project->getId()
+            ]);
         }
 
         return $this->render('projects/edit.html.twig', [
-            'project' => $project,
             'form' => $form,
+            'project' => $project,
         ]);
     }
 }

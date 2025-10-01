@@ -26,7 +26,7 @@ class ProjectFormType extends AbstractType
             },
                 'placeholder' => '',
                 'multiple' => true,
-                'label' => 'Inviter des membres', 
+                'label' => 'Inviter des membres',
                 'required' => false,
             ])
         ;

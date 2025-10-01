@@ -1,0 +1,18 @@
+{% extends 'nolog.html.twig' %}
+
+{% block title %}Inscription - TaskLinker{% endblock %}
+
+{% block body %}
+    <h1>S'inscrire</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.firstName) }}
+        {{ form_row(registrationForm.lastName) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.password) }}
+        <button type="submit" class="button button-submit">Continuer</button>
+        <a href="{{ path('app_login') }}" class="link-logout">Vous avez déjà un compte ?</a>
+    {{ form_end(registrationForm) }}
+{% endblock %}
